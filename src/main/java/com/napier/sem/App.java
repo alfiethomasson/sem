@@ -18,7 +18,7 @@ public class App
         // Connect to database
         a.connect();
         // Get Employee
-        Employee emp = a.getEmployee(255530);
+        Employee emp = a.getEmployee(Engineer);
         // Display results
         a.displayEmployee(emp);
 
@@ -87,7 +87,7 @@ public class App
         }
     }
 
-    public Employee getEmployee(int ID)
+    public Employee getEmployee(string title)
     {
         try
         {
@@ -95,9 +95,14 @@ public class App
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT emp_no, first_name, last_name "
-                            + "FROM employees "
-                            + "WHERE emp_no = " + ID;
+                    "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary "
+                            + "FROM employees, salaries, titles "
+                            + "WHERE employees.emp_no = salaries.emp_no"
+                            + "AND employees.emp_no = titles.emp_no"
+                            + "AND salaries.to_date = '9999-01-01'"
+                            + "AND titles.to_date = '9999-01-01'"
+                            + "AND titles.title = title"
+                            + "ORDER BY employees.emp_no ASC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
